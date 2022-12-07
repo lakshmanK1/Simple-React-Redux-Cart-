@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import Cart from './components/Cart/Cart';
+import Layout from './components/Layout/Layout';
+import Products from './components/Shop/Products';
+import { UiActions } from './Store/Ui-Slice';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import {CrudCartItems, fetchCartData} from './Store/Cart-actions'
 
+let isInitial = true;
 function App() {
+
+  const dispatch = useDispatch();
+
+  const isCart = useSelector(state=>state.Ui.CartState);
+
+  const CartItems = useSelector(state => state.Cart);
+
+  useEffect(()=>{
+    dispatch(fetchCartData());
+  },[dispatch]);
+
+  useEffect(()=>{
+
+    if(isInitial){
+      isInitial = false;
+      return;
+    }
+    dispatch(CrudCartItems(CartItems));
+    
+  },[CartItems, dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout showCart={()=>{dispatch(UiActions.openCart())}}>
+    {isCart &&  <Cart />}
+      <Products />
+    </Layout>
   );
 }
 
