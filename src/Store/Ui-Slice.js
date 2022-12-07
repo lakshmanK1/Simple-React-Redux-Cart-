@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit'
 
-const initialCartState = {CartState:false}
+const initialCartState = {CartState:false, notification:null}
 
 const uiSlice = createSlice({
     name:'cart',
@@ -12,7 +12,15 @@ const uiSlice = createSlice({
 
         closeCart : (state)=>{
             state.CartState = false;
-        } 
+        } ,
+
+        showNotification : (state, action) => {
+            state.notification = {
+                status : action.payload.status,
+                title : action.payload.title,
+                message : action.payload.message
+            }
+        }
     }
 });
 

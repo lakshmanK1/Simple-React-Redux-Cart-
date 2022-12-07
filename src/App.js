@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import {CrudCartItems, fetchCartData} from './Store/Cart-actions'
+import Notification from './components/UI/Notification'
 
 let isInitial = true;
 function App() {
@@ -15,6 +16,8 @@ function App() {
   const isCart = useSelector(state=>state.Ui.CartState);
 
   const CartItems = useSelector(state => state.Cart);
+
+  const notification = useSelector(state => state.Ui.notification);
 
   useEffect(()=>{
     dispatch(fetchCartData());
@@ -31,10 +34,17 @@ function App() {
   },[CartItems, dispatch]);
 
   return (
+    <>
+    {notification && <Notification
+    status={notification.status}
+    title={notification.title}
+    message={notification.message}/>}
+    
     <Layout showCart={()=>{dispatch(UiActions.openCart())}}>
     {isCart &&  <Cart />}
       <Products />
     </Layout>
+    </>
   );
 }
 
